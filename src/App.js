@@ -1,6 +1,7 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './utils/AuthContext';
+import { AssetProvider } from './context/AssetContext';
 import PrivateRoute from './components/PrivateRoute';
 import './index.css';
 
@@ -14,35 +15,43 @@ import HistoryPage from './pages/HistoryPage';
 import AlertsPage from './pages/AlertsPage';
 import FinalizationPage from './pages/FinalizationPage';
 import UserProfile from './pages/UserProfile';
-import FeaturesPage from './pages/FeaturesPage';
-import FeatureDetailPage from './pages/FeatureDetailPage';
 import AdminPage from './pages/AdminPage';
+
+// Multi-Asset Platform Pages
+import AssetCommandCenter from './pages/AssetCommandCenter';
+import AssetList from './pages/AssetList';
+import UnifiedDashboard from './pages/UnifiedDashboard';
 
 function App() {
   return (
     <AuthProvider>
-      <Router>
-        <Routes>
-          {/* Public Pages */}
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/demo" element={<DemoPage />} />
-          <Route path="/finalization" element={<FinalizationPage />} />
-          <Route path="/features" element={<FeaturesPage />} />
-          <Route path="/feature/:id" element={<FeatureDetailPage />} />
+      <AssetProvider>
+        <Router>
+          <Routes>
+            {/* Public Pages */}
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/login" element={<LoginPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/demo" element={<DemoPage />} />
+            <Route path="/finalization" element={<FinalizationPage />} />
 
-          {/* Protected Pages */}
-          <Route path="/dashboard" element={<PrivateRoute component={Dashboard} />} />
-          <Route path="/admin" element={<PrivateRoute component={AdminPage} adminOnly={true} />} />
-          <Route path="/profile" element={<PrivateRoute component={UserProfile} />} />
-          <Route path="/history" element={<PrivateRoute component={HistoryPage} />} />
-          <Route path="/alerts" element={<PrivateRoute component={AlertsPage} />} />
+            {/* Protected Pages */}
+            <Route path="/dashboard" element={<PrivateRoute component={Dashboard} />} />
+            <Route path="/admin" element={<PrivateRoute component={AdminPage} adminOnly={true} />} />
+            <Route path="/profile" element={<PrivateRoute component={UserProfile} />} />
+            <Route path="/history" element={<PrivateRoute component={HistoryPage} />} />
+            <Route path="/alerts" element={<PrivateRoute component={AlertsPage} />} />
 
-          {/* Catch all */}
-          <Route path="*" element={<Navigate to="/" replace />} />
-        </Routes>
-      </Router>
+            {/* Multi-Asset Platform Routes */}
+            <Route path="/command-center" element={<PrivateRoute component={AssetCommandCenter} />} />
+            <Route path="/asset-list" element={<PrivateRoute component={AssetList} />} />
+            <Route path="/unified-dashboard" element={<PrivateRoute component={UnifiedDashboard} />} />
+
+            {/* Catch all */}
+            <Route path="*" element={<Navigate to="/" replace />} />
+          </Routes>
+        </Router>
+      </AssetProvider>
     </AuthProvider>
   );
 }

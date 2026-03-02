@@ -10,11 +10,11 @@ const corsMiddleware = require('./middleware/cors');
 const logger = require('./middleware/logger');
 const errorHandler = require('./middleware/errorHandler');
 
-// Import routes
 const healthRoutes = require('./routes/healthRoutes');
 const sensorRoutes = require('./routes/sensorRoutes');
 const authRoutes = require('./routes/authRoutes');
 const dataRoutes = require('./routes/dataRoutes');
+const assetRoutes = require('./routes/assetRoutes');
 
 // Create Express app
 const app = express();
@@ -59,8 +59,10 @@ app.use(`${config.API_PREFIX}/sensor-data`, sensorRoutes);
 // Authentication routes
 app.use('/api/auth', authRoutes);
 
-// Data and bridge routes
 app.use('/api', dataRoutes);
+
+// Asset routes (new multi-asset system)
+app.use('/api/assets', assetRoutes);
 
 // Root endpoint
 app.get('/', (req, res) => {

@@ -2,14 +2,23 @@ const mongoose = require('mongoose');
 
 const alertSchema = new mongoose.Schema(
   {
-    bridgeId: {
+    assetId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: 'Bridge',
+      ref: 'Asset',
+      required: true,
+    },
+    assetType: {
+      type: String,
+      enum: ['bridge', 'building', 'tunnel'],
       required: true,
     },
     type: {
       type: String,
-      enum: ['vibration', 'load', 'crack', 'temperature', 'risk'],
+      enum: [
+        'vibration', 'load', 'crack', 'temperature', 'risk',
+        'tilt', 'displacement', 'waterPressure', 'humidity', 'structuralStrain',
+        'structuralDegradation'
+      ],
       required: true,
     },
     severity: {
@@ -22,6 +31,10 @@ const alertSchema = new mongoose.Schema(
       required: true,
     },
     value: {
+      type: Number,
+      required: true,
+    },
+    threshold: {
       type: Number,
       required: true,
     },
@@ -45,5 +58,9 @@ const alertSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
+// Index for queries
+alertSchema.index({ assetId: 1, resolved: 1, createdAt: -1 });
+alertSchema.index({ assetType: 1, severity: 1 });
 
 module.exports = mongoose.model('Alert', alertSchema);

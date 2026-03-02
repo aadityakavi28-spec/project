@@ -2,7 +2,7 @@ import React, { useMemo } from 'react';
 
 /**
  * Maintenance Recommendation Engine Component
- * Displays maintenance recommendations based on risk score
+ * Displays maintenance recommendations based on risk score - Light Theme
  */
 
 const MaintenanceRecommendation = ({ riskScore }) => {
@@ -12,10 +12,10 @@ const MaintenanceRecommendation = ({ riskScore }) => {
       return {
         recommendation: "Routine Monitoring Recommended",
         priority: "LOW",
-        bgColor: "bg-green-900 bg-opacity-20",
-        borderColor: "border-green-500",
-        textColor: "text-green-400",
-        badgeColor: "bg-green-500 text-white",
+        bgColor: "bg-emerald-50",
+        borderColor: "border-emerald-200",
+        textColor: "text-emerald-700",
+        badgeColor: "bg-emerald-500 text-white",
         icon: "✅",
         actionItems: [
           "Continue regular monitoring schedule",
@@ -25,16 +25,17 @@ const MaintenanceRecommendation = ({ riskScore }) => {
         ],
         timeline: "Next scheduled inspection: 30 days",
         description: "Bridge is operating within normal parameters. Continue with standard maintenance protocols.",
+        progressGradient: "from-emerald-400 to-teal-400"
       };
     }
     if (riskScore >= 40 && riskScore < 75) {
       return {
         recommendation: "Schedule Structural Inspection Within 7 Days",
         priority: "MEDIUM",
-        bgColor: "bg-yellow-900 bg-opacity-20",
-        borderColor: "border-yellow-500",
-        textColor: "text-yellow-400",
-        badgeColor: "bg-yellow-500 text-white",
+        bgColor: "bg-amber-50",
+        borderColor: "border-amber-200",
+        textColor: "text-amber-700",
+        badgeColor: "bg-amber-500 text-white",
         icon: "⚠️",
         actionItems: [
           "Schedule inspection within 7 days",
@@ -44,15 +45,16 @@ const MaintenanceRecommendation = ({ riskScore }) => {
         ],
         timeline: "Action required within: 7 days",
         description: "Structural integrity showing elevated stress levels. Professional inspection recommended to ensure continued safety.",
+        progressGradient: "from-amber-400 to-orange-400"
       };
     }
     return {
       recommendation: "Immediate Load Restriction & Emergency Inspection Required",
       priority: "CRITICAL",
-      bgColor: "bg-red-900 bg-opacity-20",
-      borderColor: "border-red-500",
-      textColor: "text-red-400",
-      badgeColor: "bg-red-600 text-white",
+      bgColor: "bg-rose-50",
+      borderColor: "border-rose-300",
+      textColor: "text-rose-700",
+      badgeColor: "bg-rose-600 text-white",
       icon: "🚨",
       actionItems: [
         "🔴 IMMEDIATE: Restrict vehicle loads",
@@ -63,84 +65,79 @@ const MaintenanceRecommendation = ({ riskScore }) => {
       ],
       timeline: "Action required: IMMEDIATE (within 24 hours)",
       description: "CRITICAL: Bridge detected with severe structural stress. Immediate action and emergency inspection required.",
+      progressGradient: "from-rose-500 to-pink-500"
     };
   }, [riskScore]);
 
   return (
-    <div className={`card-glow border-2 ${details.borderColor} ${details.bgColor} backdrop-blur-md transition-all duration-300 hover-lift`}>
+    <div className={`card-professional p-6 border-2 ${details.borderColor} ${details.bgColor}`}>
       {/* Header with Icon and Priority Badge */}
-      <div className="flex items-center justify-between mb-6">
+      <div className="flex items-center justify-between mb-5">
         <div className="flex items-center gap-4">
-          <span className="text-5xl transform animate-bounce">{details.icon}</span>
-          <h3 className="text-2xl font-bold text-cyan-400">Maintenance Recommendation</h3>
+          <span className="text-4xl">{details.icon}</span>
+          <h3 className="text-lg font-bold text-text-primary">Maintenance Recommendation</h3>
         </div>
-        <span className={`px-4 py-2 rounded-full text-sm font-bold ${details.badgeColor} shadow-lg`}>
+        <span className={`px-4 py-1.5 rounded-full text-sm font-bold ${details.badgeColor} shadow-sm`}>
           {details.priority}
         </span>
       </div>
 
       {/* Main Recommendation Text */}
-      <div className={`mb-6 p-5 rounded-lg bg-slate-800 bg-opacity-40 border-2 ${details.borderColor} border-opacity-40`}>
-        <p className={`text-xl font-bold ${details.textColor} mb-3`}>
+      <div className={`mb-5 p-4 rounded-xl bg-white border-2 ${details.borderColor} border-opacity-50`}>
+        <p className={`text-lg font-bold ${details.textColor} mb-2`}>
           {details.recommendation}
         </p>
-        <p className="text-slate-300 leading-relaxed">
+        <p className="text-text-secondary leading-relaxed text-sm">
           {details.description}
         </p>
       </div>
 
       {/* Timeline */}
-      <div className="mb-6 flex items-center gap-3 text-sm font-bold text-cyan-400 bg-slate-800 bg-opacity-40 p-4 rounded-lg">
-        <span className="text-2xl">⏱️</span>
+      <div className="mb-5 flex items-center gap-3 text-sm font-semibold text-primary-600 bg-primary-50 px-4 py-3 rounded-xl">
+        <span className="text-xl">⏱️</span>
         <span>{details.timeline}</span>
       </div>
 
       {/* Action Items */}
-      <div className="mb-6">
-        <h4 className="text-lg font-bold text-cyan-400 mb-4 flex items-center space-x-2">
+      <div className="mb-5">
+        <h4 className="text-sm font-bold text-text-primary mb-3 flex items-center gap-2">
           <span>✓</span>
           <span>Required Actions:</span>
         </h4>
-        <ul className="space-y-3">
+        <ul className="space-y-2">
           {details.actionItems.map((item, index) => (
             <li
               key={index}
-              className={`text-base flex items-start gap-3 p-3 rounded-lg bg-slate-800 bg-opacity-30 border border-slate-600 border-opacity-50 ${details.textColor}`}
+              className="text-sm flex items-start gap-3 p-3 rounded-lg bg-white border border-slate-100"
             >
-              <span className="text-xl mt-0.5">→</span>
-              <span className="font-semibold">{item}</span>
+              <span className="text-lg mt-0.5">→</span>
+              <span className="font-medium text-text-secondary">{item}</span>
             </li>
           ))}
         </ul>
       </div>
 
       {/* Risk Score Meter */}
-      <div className="card-elevated border-2 border-cyan-500 border-opacity-40 rounded-lg p-5 mb-6 text-center">
-        <p className="text-sm text-slate-400 mb-3 font-semibold">Current Risk Score</p>
+      <div className="p-5 rounded-xl bg-white border-2 border-slate-200 mb-5">
+        <p className="text-sm text-text-muted mb-3 font-medium text-center">Current Risk Score</p>
         <div className="flex items-center justify-center gap-3">
-          <p className={`text-5xl font-bold ${details.textColor} glow-text`}>
-            {riskScore.toFixed(1)}
+          <p className={`text-5xl font-extrabold ${details.textColor}`}>
+            {riskScore.toFixed(0)}
           </p>
-          <p className="text-lg text-slate-400 font-semibold">/ 100</p>
+          <p className="text-lg text-text-muted font-medium">/ 100</p>
         </div>
-        <div className="mt-4 w-full bg-slate-700 bg-opacity-50 rounded-full h-3 overflow-hidden">
+        <div className="mt-4 w-full bg-slate-100 rounded-full h-3 overflow-hidden">
           <div
-            className={`h-3 rounded-full transition-all duration-500 shadow-glow ${
-              riskScore < 40
-                ? "bg-gradient-to-r from-green-500 to-emerald-400"
-                : riskScore < 75
-                ? "bg-gradient-to-r from-yellow-500 to-orange-400"
-                : "bg-gradient-to-r from-red-600 to-pink-500"
-            }`}
+            className={`h-3 rounded-full transition-all duration-700 ${details.progressGradient.startsWith('from-') ? `bg-gradient-to-r ${details.progressGradient}` : 'bg-gradient-to-r from-emerald-400 to-teal-400'}`}
             style={{ width: `${riskScore}%` }}
           />
         </div>
       </div>
 
       {/* Footer Note */}
-      <div className="p-4 bg-cyan-500 bg-opacity-15 rounded-lg border-2 border-cyan-500 border-opacity-30 backdrop-blur-sm">
-        <p className="text-xs text-slate-300 leading-relaxed">
-          <span className="text-cyan-400 font-bold">📋 Disclaimer:</span>
+      <div className="p-4 bg-primary-50 rounded-xl border border-primary-100">
+        <p className="text-xs text-text-secondary leading-relaxed">
+          <span className="text-primary-600 font-bold">📋 Disclaimer:</span>
           <br />
           This recommendation is based on real-time sensor data analysis. Always conduct professional inspections
           and consult with qualified structural engineers for critical decisions.

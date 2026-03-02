@@ -9,79 +9,97 @@ const SensorCard = ({
   max, 
   threshold 
 }) => {
-  // Determine color based on threshold
+  // Determine color based on threshold - Light Theme
   const getCardStyle = () => {
     if (threshold && value > threshold) {
-      return 'border-red-500 bg-gradient-to-br from-red-900 to-red-800 bg-opacity-40 hover:shadow-lg hover:shadow-red-500/50';
+      return 'border-rose-300 bg-gradient-to-br from-white to-rose-50 hover:shadow-rose-100/50';
     }
     if (value > (max * 0.75)) {
-      return 'border-yellow-500 bg-gradient-to-br from-yellow-900 to-yellow-800 bg-opacity-40 hover:shadow-lg hover:shadow-yellow-500/50';
+      return 'border-amber-300 bg-gradient-to-br from-white to-amber-50 hover:shadow-amber-100/50';
     }
-    return 'border-cyan-500 bg-gradient-to-br from-cyan-900 to-cyan-800 bg-opacity-40 hover:shadow-lg hover:shadow-cyan-500/50';
+    return 'border-slate-200 bg-gradient-to-br from-white to-primary-50/30 hover:shadow-primary-100/50';
   };
 
   const getValueColor = () => {
     if (threshold && value > threshold) {
-      return 'text-red-400';
+      return 'text-rose-600';
     }
     if (value > (max * 0.75)) {
-      return 'text-yellow-400';
+      return 'text-amber-600';
     }
-    return 'text-cyan-400';
+    return 'text-primary-600';
   };
 
   const getProgressColor = () => {
-    if (value > (max * 0.75)) {
-      return 'bg-gradient-to-r from-red-500 to-red-400';
+    if (threshold && value > threshold) {
+      return 'bg-gradient-to-r from-rose-500 to-rose-400';
     }
-    return 'bg-gradient-to-r from-cyan-500 to-blue-500';
+    if (value > (max * 0.75)) {
+      return 'bg-gradient-to-r from-amber-500 to-amber-400';
+    }
+    return 'bg-gradient-to-r from-primary-500 to-primary-400';
   };
 
   const getProgressBgColor = () => {
     if (threshold && value > threshold) {
-      return 'bg-red-900 bg-opacity-30';
+      return 'bg-rose-100';
     }
     if (value > (max * 0.75)) {
-      return 'bg-yellow-900 bg-opacity-30';
+      return 'bg-amber-100';
     }
-    return 'bg-slate-700 bg-opacity-50';
+    return 'bg-slate-100';
+  };
+
+  const getIconBg = () => {
+    if (threshold && value > threshold) {
+      return 'bg-gradient-to-br from-rose-100 to-rose-200 text-rose-600';
+    }
+    if (value > (max * 0.75)) {
+      return 'bg-gradient-to-br from-amber-100 to-amber-200 text-amber-600';
+    }
+    return 'bg-gradient-to-br from-primary-100 to-primary-200 text-primary-600';
   };
 
   return (
-    <div className={`card-glow border-2 ${getCardStyle()} transform hover:scale-105 transition-all duration-500 group`}>
-      <div className="flex items-center justify-between mb-6">
-        <h3 className="text-lg font-bold text-slate-100 group-hover:text-cyan-300 transition-colors duration-300">{title}</h3>
-        <div className="text-4xl transform group-hover:rotate-12 transition-transform duration-500">{icon}</div>
+    <div className={`card-professional p-6 border-2 ${getCardStyle()} transform hover:-translate-y-1 transition-all duration-300 group`}>
+      <div className="flex items-center justify-between mb-5">
+        <h3 className="text-base font-bold text-text-secondary group-hover:text-text-primary transition-colors duration-300">
+          {title}
+        </h3>
+        <div className={`w-12 h-12 rounded-xl flex items-center justify-center text-2xl transform group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 ${getIconBg()}`}>
+          {icon}
+        </div>
       </div>
       
-      <div className="mb-6">
-        <p className={`text-5xl font-bold ${getValueColor()} transition-colors duration-300`}>
-          {value.toFixed(2)}
+      <div className="mb-5">
+        <p className={`text-4xl font-extrabold ${getValueColor()} transition-colors duration-300 tracking-tight`}>
+          {value.toFixed(1)}
         </p>
-        <p className="text-sm text-slate-400 mt-2 font-semibold">{unit}</p>
+        <p className="text-sm text-text-muted mt-1.5 font-medium">{unit}</p>
       </div>
 
       {/* Progress bar */}
-      <div className={`w-full ${getProgressBgColor()} rounded-full h-3 overflow-hidden`}>
+      <div className={`w-full ${getProgressBgColor()} rounded-full h-2.5 overflow-hidden mb-4`}>
         <div
-          className={`h-3 rounded-full transition-all duration-500 shadow-glow ${getProgressColor()}`}
+          className={`h-2.5 rounded-full transition-all duration-700 shadow-sm ${getProgressColor()}`}
           style={{ width: `${Math.min((value / max) * 100, 100)}%` }}
         />
       </div>
 
-      <div className="flex justify-between text-xs text-slate-400 mt-4 font-semibold">
-        <span className="hover:text-slate-300 transition-colors">Min: {min.toFixed(2)}</span>
-        <span className="hover:text-slate-300 transition-colors">Max: {max.toFixed(2)}</span>
+      <div className="flex justify-between text-xs text-text-muted font-medium">
+        <span>Min: {min.toFixed(1)}</span>
+        <span>Max: {max.toFixed(1)}</span>
       </div>
 
       {/* Threshold indicator */}
       {threshold && (
-        <div className={`mt-4 px-3 py-2 rounded-lg text-xs font-bold text-center ${
+        <div className={`mt-4 px-3 py-2 rounded-lg text-xs font-bold text-center flex items-center justify-center gap-2 ${
           value > threshold 
-            ? 'bg-red-500 bg-opacity-30 text-red-400 border border-red-500 border-opacity-50'
-            : 'bg-yellow-500 bg-opacity-20 text-yellow-400 border border-yellow-500 border-opacity-30'
+            ? 'bg-rose-100 text-rose-600 border border-rose-200'
+            : 'bg-amber-100 text-amber-600 border border-amber-200'
         }`}>
-          ⚠️ Threshold: {threshold.toFixed(2)}
+          {value > threshold ? '⚠️' : '👁️'} 
+          Threshold: {threshold.toFixed(1)}
         </div>
       )}
     </div>

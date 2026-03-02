@@ -33,8 +33,8 @@ const Dashboard = () => {
   const [apiCallCount, setApiCallCount] = useState(0);
   const [apiSuccessCount, setApiSuccessCount] = useState(0);
   const [dataSource, setDataSource] = useState({
-    weather: { connected: true },  // Optimistic: assume connected initially
-    earthquake: { connected: true },  // Optimistic: assume connected initially
+    weather: { connected: true },
+    earthquake: { connected: true },
   });
   const [nextUpdateCountdown, setNextUpdateCountdown] = useState(10);
 
@@ -59,7 +59,6 @@ const Dashboard = () => {
       const city = process.env.REACT_APP_WEATHER_CITY || 'London';
       const countryCode = process.env.REACT_APP_WEATHER_COUNTRY_CODE || 'GB';
 
-      // Check if API key is configured (placeholder values mean not set)
       if (!apiKey || apiKey === 'demo_key_here' || apiKey.includes('YOUR_KEY') || apiKey.includes('key_here')) {
         console.warn('⚠️ Weather API key not configured. Please add your OpenWeather API key to .env.local');
         console.warn('📖 See WEATHER_API_SETUP.md for instructions');
@@ -74,7 +73,6 @@ const Dashboard = () => {
 
       const { main, wind } = response.data;
       
-      // Mark weather API as connected on success
       setDataSource(prev => ({ ...prev, weather: { connected: true } }));
       setApiSuccessCount(prev => prev + 1);
       
@@ -103,7 +101,6 @@ const Dashboard = () => {
       );
 
       if (response.data.features && response.data.features.length > 0) {
-        // Get the most recent earthquake with magnitude > 4
         const recentEarthquakes = response.data.features
           .map(eq => ({
             magnitude: eq.properties.mag,
@@ -116,7 +113,6 @@ const Dashboard = () => {
         if (recentEarthquakes.length > 0) {
           const latestEarthquake = recentEarthquakes[0];
           
-          // Only process if it's a new earthquake (different from last one)
           if (lastEarthquakeRef.current !== latestEarthquake.time) {
             lastEarthquakeRef.current = latestEarthquake.time;
             const spike = latestEarthquake.magnitude * 2;
@@ -129,7 +125,6 @@ const Dashboard = () => {
         }
       }
       
-      // Mark earthquake API as connected on success
       setDataSource(prev => ({ ...prev, earthquake: { connected: true } }));
       setApiSuccessCount(prev => prev + 1);
       console.log('✅ Earthquake API Success');
@@ -153,38 +148,27 @@ const Dashboard = () => {
     const updateSensorData = async () => {
       if (isUnmounted) return;
 
-      // Set fetching state and reset countdown
       setIsFetching(true);
       setNextUpdateCountdown(10);
       setApiCallCount(prev => prev + 1);
 
-      // Fetch real data from APIs
       const weatherData = await fetchWeatherData();
       const earthquakeSpike = await fetchEarthquakeData();
 
       if (isUnmounted) return;
 
-      // ==========================================
       // UPDATE TEMPERATURE (REAL from weather API)
-      // ==========================================
       if (weatherData) {
         setTemperature(weatherData.temperature);
         
-        // ==========================================
         // UPDATE VIBRATION (REAL wind + earthquake)
-        // ==========================================
-        // Base vibration from wind speed: windSpeed * 4
         let baseVibration = weatherData.windSpeed * 4;
-        
-        // Add earthquake spike if active
         let totalVibration = baseVibration + earthquakeSpikeRef.current;
         
-        // Gradually reduce earthquake spike over time
         if (earthquakeSpikeRef.current > 0) {
           earthquakeSpikeRef.current = Math.max(0, earthquakeSpikeRef.current - 2);
         }
         
-        // Keep vibration in realistic range: 5-95
         totalVibration = Math.max(5, Math.min(95, totalVibration));
         setVibration(totalVibration);
 
@@ -206,17 +190,13 @@ const Dashboard = () => {
         });
       }
 
-      // ==========================================
       // UPDATE LOAD STRESS (SIMULATED - traffic)
-      // ==========================================
       setLoad(prev => {
         const change = (Math.random() - 0.5) * 10;
         return Math.max(10, Math.min(100, prev + change));
       });
 
-      // ==========================================
       // UPDATE CRACK WIDTH (SIMULATED - slow growth)
-      // ==========================================
       setCrack(prev => {
         const change = (Math.random() - 0.5) * 3;
         return Math.max(0, Math.min(25, prev + change));
@@ -227,7 +207,6 @@ const Dashboard = () => {
       setNextUpdateCountdown(10);
     };
 
-    // Countdown timer
     const startCountdown = () => {
       if (countdownInterval) clearInterval(countdownInterval);
       countdownInterval = setInterval(() => {
@@ -240,11 +219,8 @@ const Dashboard = () => {
       }, 1000);
     };
 
-    // Initial update
     updateSensorData();
     startCountdown();
-
-    // Set up interval for continuous updates (every 10 seconds)
     interval = setInterval(updateSensorData, 10000);
 
     return () => {
@@ -266,17 +242,16 @@ const Dashboard = () => {
           vibration: vibration,
         },
       ];
-      // Keep only last 30 data points
       return newData.slice(-30);
     });
   }, [vibration]);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-slate-100">
       <Navbar />
 
-      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-20">
-        {/* Live Data Indicator - Hackathon Display */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 pt-24">
+        {/* Live Data Indicator */}
         <LiveDataIndicator
           isConnected={isLiveDataConnected}
           lastUpdateTime={lastUpdateTime}
@@ -288,43 +263,43 @@ const Dashboard = () => {
         />
 
         {/* API ROLE EXPLANATION PANEL */}
-        <div className="card-glow border-2 border-cyan-500 border-opacity-60 rounded-xl p-6 mb-8 shadow-glow-lg mb-8">
-          <h2 className="text-2xl font-bold text-cyan-400 mb-6 flex items-center space-x-3">
-            <span className="text-3xl">🔌</span>
+        <div className="card-professional p-6 mb-6 border-l-4 border-l-primary-500">
+          <h2 className="text-xl font-bold text-text-primary mb-5 flex items-center gap-3">
+            <span className="text-2xl">🔌</span>
             <span>Real-time Data API Status</span>
           </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
             {/* Weather API */}
-            <div className={`card-elevated border-2 ${
+            <div className={`card-elevated p-4 rounded-xl border-2 ${
               dataSource.weather.connected
-                ? 'border-green-500 border-opacity-60'
-                : 'border-red-500 border-opacity-60'
+                ? 'border-emerald-200'
+                : 'border-rose-200'
             }`}>
               <div className="flex items-center gap-3 mb-3">
-                <span className={`text-3xl ${dataSource.weather.connected ? '🌍' : '❌'}`}></span>
+                <span className="text-2xl">{dataSource.weather.connected ? '🌍' : '❌'}</span>
                 <div>
-                  <p className="text-sm font-bold text-cyan-400">WEATHER API</p>
-                  <span className={`inline-block text-xs px-3 py-1 rounded-full font-bold ${
+                  <p className="text-sm font-bold text-primary-600">WEATHER API</p>
+                  <span className={`inline-block text-xs px-3 py-1 rounded-full font-semibold ${
                     dataSource.weather.connected
-                      ? 'bg-green-500 bg-opacity-30 text-green-400'
-                      : 'bg-red-500 bg-opacity-30 text-red-400'
+                      ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                      : 'bg-rose-50 text-rose-600 border border-rose-200'
                   }`}>
                     {dataSource.weather.connected ? '✓ LIVE' : '✗ OFFLINE'}
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-slate-300 mb-3">
-                <strong className="text-cyan-300">Function:</strong> Fetches real temperature & wind speed from OpenWeather
+              <p className="text-sm text-text-secondary mb-3">
+                <strong className="text-primary-600">Function:</strong> Fetches real temperature & wind speed from OpenWeather
               </p>
               <div className="space-y-2 text-sm mb-4">
-                <p className="text-slate-400">
-                  📊 <span className="text-cyan-400">Temperature</span> → Real thermal monitoring
+                <p className="text-text-muted">
+                  📊 <span className="text-primary-600">Temperature</span> → Real thermal monitoring
                 </p>
-                <p className="text-slate-400">
-                  💨 <span className="text-cyan-400">Wind Speed</span> → Realistic vibration basis
+                <p className="text-text-muted">
+                  💨 <span className="text-primary-600">Wind Speed</span> → Realistic vibration basis
                 </p>
-                <p className={`font-bold text-sm ${
-                  dataSource.weather.connected ? 'text-green-400' : 'text-red-400'
+                <p className={`font-semibold text-sm ${
+                  dataSource.weather.connected ? 'text-emerald-600' : 'text-rose-600'
                 }`}>
                   {dataSource.weather.connected 
                     ? '✓ Connected: Real data flowing'
@@ -332,58 +307,56 @@ const Dashboard = () => {
                 </p>
               </div>
               
-              {/* Setup Button */}
               {!dataSource.weather.connected && (
                 <a 
                   href="https://openweathermap.org/api" 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-full btn-primary text-xs py-2 px-3 rounded transition-all block text-center mb-2 hover:shadow-glow"
+                  className="w-full btn-primary text-xs py-2.5 px-3 rounded-lg block text-center mb-2"
                 >
                   🔧 Get Free API Key
                 </a>
               )}
               
-              {/* Instructions Link */}
               <a 
                 href={process.env.PUBLIC_URL + '/WEATHER_API_SETUP.md'} 
-                className="w-full btn-secondary text-xs py-2 px-3 rounded transition-all block text-center"
+                className="w-full btn-secondary text-xs py-2.5 px-3 rounded-lg block text-center"
               >
                 📖 Setup Guide
               </a>
             </div>
 
             {/* Earthquake API */}
-            <div className={`card-elevated border-2 ${
+            <div className={`card-elevated p-4 rounded-xl border-2 ${
               dataSource.earthquake.connected
-                ? 'border-green-500 border-opacity-60'
-                : 'border-yellow-500 border-opacity-60'
+                ? 'border-emerald-200'
+                : 'border-amber-200'
             }`}>
               <div className="flex items-center gap-3 mb-3">
-                <span className={`text-3xl ${dataSource.earthquake.connected ? '📍' : '⚠️'}`}></span>
+                <span className="text-2xl">{dataSource.earthquake.connected ? '📍' : '⚠️'}</span>
                 <div>
-                  <p className="text-sm font-bold text-cyan-400">EARTHQUAKE API</p>
-                  <span className={`inline-block text-xs px-3 py-1 rounded-full font-bold ${
+                  <p className="text-sm font-bold text-primary-600">EARTHQUAKE API</p>
+                  <span className={`inline-block text-xs px-3 py-1 rounded-full font-semibold ${
                     dataSource.earthquake.connected
-                      ? 'bg-green-500 bg-opacity-30 text-green-400'
-                      : 'bg-yellow-500 bg-opacity-30 text-yellow-400'
+                      ? 'bg-emerald-50 text-emerald-600 border border-emerald-200'
+                      : 'bg-amber-50 text-amber-600 border border-amber-200'
                   }`}>
                     {dataSource.earthquake.connected ? '✓ LIVE' : '⚠ CHECKING'}
                   </span>
                 </div>
               </div>
-              <p className="text-sm text-slate-300 mb-3">
-                <strong className="text-cyan-300">Function:</strong> Detects real earthquakes (magnitude > 4) in real-time
+              <p className="text-sm text-text-secondary mb-3">
+                <strong className="text-primary-600">Function:</strong> Detects real earthquakes (magnitude > 4)
               </p>
               <div className="space-y-2 text-sm">
-                <p className="text-slate-400">
-                  🌊 <span className="text-cyan-400">Magnitude Detection</span> → Only M4.0+ shown
+                <p className="text-text-muted">
+                  🌊 <span className="text-primary-600">Magnitude Detection</span> → Only M4.0+ shown
                 </p>
-                <p className="text-slate-400">
-                  💥 <span className="text-cyan-400">Vibration Spike</span> → Realistic physical effect on bridge
+                <p className="text-text-muted">
+                  💥 <span className="text-primary-600">Vibration Spike</span> → Physical effect on bridge
                 </p>
-                <p className={`font-bold text-sm ${
-                  dataSource.earthquake.connected ? 'text-green-400' : 'text-yellow-400'
+                <p className={`font-semibold text-sm ${
+                  dataSource.earthquake.connected ? 'text-emerald-600' : 'text-amber-600'
                 }`}>
                   {dataSource.earthquake.connected 
                     ? '✓ Connected: Real earthquakes monitored'
@@ -396,26 +369,26 @@ const Dashboard = () => {
 
         {/* Alert Box */}
         {isHighRisk && (
-          <div className="mb-8 p-6 bg-gradient-to-r from-red-900 via-red-800 to-red-900 border-2 border-red-500 rounded-lg shadow-glow-lg animate-pulse backdrop-blur-sm">
+          <div className="mb-6 p-6 bg-gradient-to-r from-rose-50 to-rose-100 border-2 border-rose-300 rounded-xl shadow-lg animate-pulse">
             <div className="flex items-center space-x-4">
-              <span className="text-5xl">⚠️</span>
+              <span className="text-4xl">⚠️</span>
               <div className="flex-1">
-                <h3 className="text-2xl font-bold text-red-200 mb-2">
+                <h3 className="text-xl font-bold text-rose-700 mb-1">
                   🔴 High Structural Risk Detected
                 </h3>
-                <p className="text-red-100 text-lg font-semibold">
-                  Risk score exceeds safe threshold. Immediate inspection and maintenance recommended.
+                <p className="text-rose-600 font-medium">
+                  Risk score exceeds safe threshold. Immediate inspection recommended.
                 </p>
               </div>
-              <span className="text-4xl animate-bounce">⚡</span>
+              <span className="text-3xl animate-bounce">⚡</span>
             </div>
           </div>
         )}
 
         {/* Top Section: Sensors & Risk Meter */}
-        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 mb-6">
           {/* Sensor Cards */}
-          <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 gap-6">
+          <div className="lg:col-span-4 grid grid-cols-1 sm:grid-cols-2 gap-5">
             <SensorCard
               title="Vibration Level"
               value={vibration}
@@ -464,18 +437,19 @@ const Dashboard = () => {
             />
           </div>
         </div>
+
         {/* Maintenance Recommendation Section */}
-        <div className="mb-8">
+        <div className="mb-6">
           <MaintenanceRecommendation riskScore={riskScore} />
         </div>
 
         {/* Key Features Section */}
-        <div className="mb-16 bg-slate-800 bg-opacity-50 backdrop-blur-sm border border-blue-500 border-opacity-30 rounded-lg p-8">
+        <div className="mb-10 bg-white/50 backdrop-blur-sm rounded-2xl p-6 border border-slate-100">
           <FeaturesSection inDashboard={true} />
         </div>
 
         {/* Bottom Section: Chart & 3D Model */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
           {/* Chart */}
           <div className="lg:col-span-2">
             <VibrationChart data={chartData} />
@@ -483,7 +457,7 @@ const Dashboard = () => {
 
           {/* 3D Bridge Model */}
           <div className="lg:col-span-1">
-            <div className="rounded-lg shadow-lg overflow-hidden bg-white" style={{ height: '400px' }}>
+            <div className="rounded-2xl shadow-lg overflow-hidden bg-white border border-slate-200" style={{ height: '400px' }}>
               <BridgeModel 
                 isRisk={isHighRisk}
                 vibration={vibration}
@@ -497,29 +471,29 @@ const Dashboard = () => {
         </div>
 
         {/* Statistics Footer */}
-        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white rounded-lg shadow-lg p-6">
+        <div className="grid grid-cols-1 sm:grid-cols-4 gap-4 bg-white rounded-2xl shadow-md border border-slate-100 p-6">
           <div className="text-center">
-            <p className="text-gray-600 text-sm">Risk Score</p>
-            <p className={`text-2xl font-bold ${isHighRisk ? 'text-red-600' : 'text-green-600'}`}>
+            <p className="text-text-muted text-sm mb-1">Risk Score</p>
+            <p className={`text-2xl font-bold ${isHighRisk ? 'text-rose-600' : 'text-emerald-600'}`}>
               {riskScore.toFixed(1)}/100
             </p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 text-sm">Last Update</p>
-            <p className="text-2xl font-bold text-blue-600">
+            <p className="text-text-muted text-sm mb-1">Last Update</p>
+            <p className="text-2xl font-bold text-primary-600">
               {new Date().toLocaleTimeString()}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 text-sm">Status</p>
-            <p className={`text-2xl font-bold ${isHighRisk ? 'text-red-600' : 'text-green-600'}`}>
+            <p className="text-text-muted text-sm mb-1">Status</p>
+            <p className={`text-xl font-bold ${isHighRisk ? 'text-rose-600' : 'text-emerald-600'}`}>
               {isHighRisk ? '🔴 Critical' : '🟢 Normal'}
             </p>
           </div>
           <div className="text-center">
-            <p className="text-gray-600 text-sm">Data Source</p>
+            <p className="text-text-muted text-sm mb-1">Data Source</p>
             <p className={`text-lg font-bold ${
-              isLiveDataConnected ? 'text-green-600' : 'text-yellow-600'
+              isLiveDataConnected ? 'text-emerald-600' : 'text-amber-600'
             }`}>
               {isLiveDataConnected ? '🌍 Live' : '⚙️ Backup'}
             </p>
