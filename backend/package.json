@@ -1,7 +1,7 @@
 {
-  "name": "smart-bridge-backend",
+  "name": "structurax-backend",
   "version": "1.0.0",
-  "description": "Smart Bridge Digital Twin Backend API",
+  "description": "StructuraX – Multi-Asset Structural Digital Twin Backend API",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -10,10 +10,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
-    "smart-bridge",
+    "structurax",
+    "digital-twin",
     "sensor",
     "api",
-    "express"
+    "express",
+    "bridges",
+    "buildings",
+    "tunnels"
   ],
   "author": "",
   "license": "MIT",

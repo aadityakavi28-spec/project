@@ -25,53 +25,45 @@ export const assetApi = {
   // Get all assets
   getAssets: async (type = null) => {
     const params = type ? { type } : {};
-    const response = await api.get('/assets', { params });
-    return response.data;
+    return api.get('/assets', { params });
   },
 
   // Get assets grouped by type
   getAssetsByType: async () => {
-    const response = await api.get('/assets/types');
-    return response.data;
+    return api.get('/assets/types');
   },
 
   // Get single asset
   getAsset: async (id) => {
-    const response = await api.get(`/assets/${id}`);
-    return response.data;
+    return api.get(`/assets/${id}`);
   },
 
   // Get latest sensor data
   getLatestData: async (id) => {
-    const response = await api.get(`/assets/${id}/latest`);
-    return response.data;
+    return api.get(`/assets/${id}/latest`);
   },
 
   // Get historical data
   getHistoricalData: async (id, hours = 24, limit = 100) => {
-    const response = await api.get(`/assets/${id}/history`, {
+    return api.get(`/assets/${id}/history`, {
       params: { hours, limit },
     });
-    return response.data;
   },
 
   // Get alerts for asset
   getAlerts: async (id, resolved = null) => {
     const params = resolved !== null ? { resolved } : {};
-    const response = await api.get(`/assets/${id}/alerts`, { params });
-    return response.data;
+    return api.get(`/assets/${id}/alerts`, { params });
   },
 
   // Create new asset (admin)
   createAsset: async (assetData) => {
-    const response = await api.post('/assets', assetData);
-    return response.data;
+    return api.post('/assets', assetData);
   },
 
   // Maintenance reset
   performMaintenance: async (id) => {
-    const response = await api.post(`/assets/${id}/maintenance`);
-    return response.data;
+    return api.post(`/assets/${id}/maintenance`);
   },
 };
 

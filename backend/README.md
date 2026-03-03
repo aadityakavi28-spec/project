@@ -1,6 +1,6 @@
-# Smart Bridge Digital Twin - Backend API
+# StructuraX – Multi-Asset Digital Twin - Backend API
 
-Professional Node.js + Express backend for real-time structural health monitoring.
+Professional Node.js + Express backend for real-time structural health monitoring of bridges, buildings, and tunnels.
 
 ## Features
 
@@ -101,7 +101,7 @@ Returns server status and uptime.
 ```json
 {
   "success": true,
-  "message": "Smart Bridge Backend API is running",
+  "message": "StructuraX Backend API is running",
   "status": "healthy",
   "timestamp": "2026-02-27T13:30:00.000Z",
   "uptime": 123.456

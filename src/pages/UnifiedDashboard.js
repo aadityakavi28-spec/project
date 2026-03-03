@@ -10,81 +10,10 @@ import { ASSET_TYPE_CONFIG, getRiskLevel } from '../utils/assetTypes';
 import Navbar from '../components/Navbar';
 import SensorCard from '../components/SensorCard';
 import RiskMeter from '../components/RiskMeter';
-import BridgeModel from '../components/BridgeModel';
+import Model3DController, { StressLegendPanel } from '../components/Model3DController';
 import VibrationChart from '../components/VibrationChart';
 import LiveDataIndicator from '../components/LiveDataIndicator';
 import MaintenanceRecommendation from '../components/MaintenanceRecommendation';
-
-// Dynamic 3D Model Loader
-const ModelLoader = ({ assetType, sensorData, riskScore }) => {
-  const [BuildingModel, setBuildingModel] = useState(null);
-  const [TunnelModel, setTunnelModel] = useState(null);
-
-  useEffect(() => {
-    if (assetType === 'building' && !BuildingModel) {
-      import('../components/BuildingModel')
-        .then(module => setBuildingModel(() => module.default))
-        .catch(err => console.error('Failed to load BuildingModel:', err));
-    }
-    if (assetType === 'tunnel' && !TunnelModel) {
-      import('../components/TunnelModel')
-        .then(module => setTunnelModel(() => module.default))
-        .catch(err => console.error('Failed to load TunnelModel:', err));
-    }
-  }, [assetType]);
-
-  // Bridge - use existing model
-  if (assetType === 'bridge') {
-    return (
-      <BridgeModel 
-        isRisk={riskScore > 75}
-        vibration={sensorData.vibration || 0}
-        load={sensorData.load || 0}
-        crack={sensorData.crack || 0}
-        temperature={sensorData.temperature || 0}
-        riskScore={riskScore}
-      />
-    );
-  }
-
-  // Building
-  if (assetType === 'building' && BuildingModel) {
-    return (
-      <BuildingModel 
-        isRisk={riskScore > 75}
-        tilt={sensorData.tilt || 0}
-        displacement={sensorData.displacement || 0}
-        crack={sensorData.crack || 0}
-        vibration={sensorData.vibration || 0}
-        riskScore={riskScore}
-      />
-    );
-  }
-
-  // Tunnel
-  if (assetType === 'tunnel' && TunnelModel) {
-    return (
-      <TunnelModel 
-        isRisk={riskScore > 75}
-        waterPressure={sensorData.waterPressure || 0}
-        humidity={sensorData.humidity || 0}
-        crack={sensorData.crack || 0}
-        structuralStrain={sensorData.structuralStrain || 0}
-        riskScore={riskScore}
-      />
-    );
-  }
-
-  // Loading state
-  return (
-    <div className="w-full h-full flex items-center justify-center bg-slate-900">
-      <div className="text-white text-center">
-        <div className="animate-spin rounded-full h-16 w-16 border-4 border-primary-500 border-t-transparent mx-auto mb-4"></div>
-        <p className="text-xl font-semibold">Loading 3D Model...</p>
-      </div>
-    </div>
-  );
-};
 
 const UnifiedDashboard = () => {
   const navigate = useNavigate();
@@ -271,15 +200,18 @@ const UnifiedDashboard = () => {
             />
           </div>
 
-          {/* 3D Model */}
-          <div className="lg:col-span-1">
+          {/* 3D Model with Controller */}
+          <div className="lg:col-span-1 relative">
             <div className="rounded-2xl shadow-lg overflow-hidden bg-white border border-slate-200" style={{ height: '400px' }}>
-              <ModelLoader 
-                assetType={assetType}
-                sensorData={sensorData}
-                riskScore={riskScore}
+              <Model3DController 
+                showHighlights={true}
               />
             </div>
+            {/* Admin Stress Legend Panel */}
+            <StressLegendPanel 
+              showHighlights={true}
+              onToggle={(enabled) => console.log('Stress zones:', enabled)}
+            />
           </div>
         </div>
 

@@ -2,7 +2,7 @@
 
 ## 🚀 SYSTEM OVERVIEW
 
-Your Smart Bridge Digital Twin now has a **fully functional, production-ready authentication system** with:
+Your StructuraX – Multi-Asset Digital Twin now has
 
 - ✅ Role-based access control (Admin, Engineer, User)
 - ✅ Mock authentication with test credentials

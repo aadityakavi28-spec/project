@@ -1,6 +1,6 @@
-# Smart Bridge Digital Twin Dashboard
+# StructuraX – Multi-Asset Digital Twin Dashboard
 
-A professional, real-time dashboard for monitoring Smart Bridge structural health using React, Tailwind CSS, Three.js, and Recharts.
+A professional, real-time dashboard for monitoring structural health of bridges, buildings, and tunnels using React, Tailwind CSS, Three.js, and Recharts.
 
 ## Features
 

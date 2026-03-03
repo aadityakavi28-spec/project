@@ -1,5 +1,6 @@
 /**
- * Main Express Application
+ * StructuraX Backend API
+ * Multi-Asset Structural Digital Twin Platform
  */
 
 const express = require('express');
@@ -35,7 +36,7 @@ app.use(logger);
 
 const connectDB = async () => {
   try {
-    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/smart-bridge';
+    const mongoURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/structurax';
     
     await mongoose.connect(mongoURI);
     
@@ -68,7 +69,7 @@ app.use('/api/assets', assetRoutes);
 app.get('/', (req, res) => {
   res.json({
     success: true,
-    message: 'Smart Bridge Digital Twin Backend API',
+    message: 'StructuraX – Multi-Asset Digital Twin Backend API',
     version: '2.0.0',
     endpoints: {
       health: '/health',
@@ -112,7 +113,7 @@ app.use(errorHandler);
 const PORT = process.env.PORT || config.PORT;
 
 app.listen(PORT, () => {
-  console.log('\n🌉 Smart Bridge Backend API v2.0');
+  console.log('\n🏗️ StructuraX Backend API v2.0');
   console.log('====================================');
   console.log(`✅ Server running on http://localhost:${PORT}`);
   console.log(`📝 Environment: ${process.env.NODE_ENV || 'development'}`);
@@ -128,3 +129,4 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
+

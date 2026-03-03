@@ -1,4 +1,4 @@
-# Smart Bridge API Testing Guide
+# StructuraX API Testing Guide
 
 ## 🔌 API Endpoints Reference
 

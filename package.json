@@ -1,7 +1,7 @@
 {
-  "name": "smart-bridge-digital-twin",
+  "name": "structurax-digital-twin",
   "version": "1.0.0",
-  "description": "Smart Bridge Digital Twin Dashboard",
+  "description": "StructuraX – Multi-Asset Structural Digital Twin Platform",
   "private": true,
   "dependencies": {
     "@heroicons/react": "^2.2.0",

@@ -21,6 +21,7 @@ import AdminPage from './pages/AdminPage';
 import AssetCommandCenter from './pages/AssetCommandCenter';
 import AssetList from './pages/AssetList';
 import UnifiedDashboard from './pages/UnifiedDashboard';
+import AssetGenerator from './pages/AssetGenerator';
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
             <Route path="/command-center" element={<PrivateRoute component={AssetCommandCenter} />} />
             <Route path="/asset-list" element={<PrivateRoute component={AssetList} />} />
             <Route path="/unified-dashboard" element={<PrivateRoute component={UnifiedDashboard} />} />
+            <Route path="/generate-asset" element={<PrivateRoute component={AssetGenerator} adminOnly={true} />} />
 
             {/* Catch all */}
             <Route path="*" element={<Navigate to="/" replace />} />
